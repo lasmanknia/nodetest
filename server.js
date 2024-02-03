@@ -134,7 +134,6 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-
 app.post('/chat', async (req, res) => {
   try {
     const userInput = req.body?.userInput;
@@ -143,7 +142,7 @@ app.post('/chat', async (req, res) => {
       return res.status(400).json({ error: 'Invalid request body' });
     }
 
-    const response = await sendMessageWithTypingIndicator(userInput);
+    const response = await runChat(userInput);
     res.json({ response });
   } catch (error) {
     console.error('Error in chat endpoint:', error);
