@@ -1,102 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Chatbot</title>
-<style>
-  body {
-    font-family: sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f0f0;
-  }
-  
-  #chat-container {
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    width: 400px;
-  }
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  #chat-history {
-    height: 300px;
-    overflow-y: scroll;
-  }
-  
-  .user-message {
-    text-align: right;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    margin-bottom: 5px;
-  }
-  
-  .bot-message {
-    text-align: left;
-    padding: 10px;
-    background-color: #e0f0e0;
-    border-radius: 10px;
-    margin-bottom: 5px;
-  }
-  
-  form {
-    display: flex;
-  }
-  
-  input {
-    flex-grow: 1;
-    margin-right: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  #loader {
-  display: none; /* Hide by default */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+      *{
+        margin: 0 ;
+        padding: 0;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+      }
+
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: red;
+      height: 100vh;
+      overflow: hidden;
+      }
+
+    #chat-container {
+      background-color: #b8298b;
+      padding: 5px;
+      height: 90vh;
+    }
+
+    h1 {
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      text-align: center;
+    }
+
+    #chat-history {
+      height: 70vh;
+      width: 95vw;
+      background-color: green;
+      overflow-y: scroll;
+    }
+
+    .user-message {
+      text-align: right;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border-radius: 10px;
+      margin-bottom: 5px;
+    }
+
+    .bot-message {
+      text-align: left;
+      padding: 10px;
+      background-color: #e0f0e0;
+      border-radius: 10px;
+      margin-bottom: 5px;
+    }
+
+    form {
+      display: flex;
+    }
+
+    input {
+      flex-grow: 1;
+      margin-right: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .typing-indicator-bot {
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid #000;
+      margin-top: 5px;
+      animation: typing 1s steps(20, end), blink-caret 0.5s step-end infinite;
+      display: none;
+    }
+
+    .typing-indicator-bot.active {
+      display: inline-block;
+    }
+
   </style>
+
 </head>
+
+
 <body>
+
+
+
   <div id="chat-container">
-  <h1>Ai by Salman Anik</h1>
-  <div id="chat-history"></div>
-  <form id="chat-form">
-    <input type="text" id="user-input" placeholder="Enter your message">
-    <button type="submit">Send</button>
-  </form>
-</div>
-<div id="loader">
-  <img src="loader.gif" width="150px" alt="Loading...">
-</div>
+    <h1>UDRITA</h1>
+    <div id="chat-history"></div>
+    <form id="chat-form">
+      <input autocomplete="off" type="text" id="user-input" placeholder="Enter your message" required>
+      <button type="submit">Send</button>
+    </form>
+    <div id="typing-indicator" class="typing-indicator"></div>
+  </div>
+
+
+
   <script>
     const chatHistory = document.getElementById('chat-history');
     const userInput = document.getElementById('user-input');
     const form = document.getElementById('chat-form');
+    const typingIndicatorBot = document.createElement('div');
+    typingIndicatorBot.className = 'typing-indicator-bot';
+
+    function addUserMessage(message) {
+      chatHistory.innerHTML += `<div class="user-message">${message}</div>`;
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    async function typeBotMessage(message) {
+      const botMessageDiv = document.createElement('div');
+      botMessageDiv.className = 'bot-message';
+
+      chatHistory.appendChild(botMessageDiv);
+      
+      for (let i = 0; i < message.length; i++) {
+        botMessageDiv.innerHTML += message[i];
+        await new Promise(resolve => setTimeout(resolve, 20)); // Adjust the timeout for typing speed
+      }
+
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    async function showTypingIndicatorBot() {
+      typingIndicatorBot.classList.add('active');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      typingIndicatorBot.classList.remove('active');
+    }
 
     async function sendMessage() {
       const userMessage = userInput.value;
-      userInput.value = ''; // Clear input field
-      console.log(userMessage)
+      userInput.value = '';
+
+      addUserMessage(userMessage); // Show user's input instantly
+
       try {
+        await showTypingIndicatorBot();
+
         const response = await fetch('/chat', {
           method: 'POST',
           headers: {
@@ -106,28 +162,17 @@
         });
 
         const data = await response.json();
-        console.log(data)
         const botMessage = data.response;
-        console.log(botMessage)
-        // Add chat message to the chat history
-        chatHistory.innerHTML += `<div class="user-message">${userMessage}</div>`;
-        chatHistory.innerHTML += `<div class="bot-message">${botMessage}</div>`;
 
-        // Scroll to the bottom of the chat history
-        chatHistory.scrollTop = chatHistory.scrollHeight;
+        await typeBotMessage(botMessage); // Display bot response with typing effect
       } catch (error) {
         console.error('Error:', error);
-        // Handle errors gracefully, e.g., display an error message to the user
       }
     }
 
-    form.addEventListener('submit', (event) => {
-      event.preventDefault(); // Prevent form submission
-      const loader = document.getElementById('loader');
-      loader.style.display = 'block'; // Show the loader
-      sendMessage().finally(() => {
-      loader.style.display = 'none'; // Hide the loader after the message is sent
-    });;
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      await sendMessage();
     });
   </script>
 </body>
