@@ -4,93 +4,150 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="style.css">
   <style>
-      *{
-        margin: 0 ;
-        padding: 0;
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-
-      }
-
+    * {
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      box-sizing: border-box;
+    }
+    
     body {
-      font-family: sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: red;
+      background-color: #fff; /* Change background color to white */
       height: 100vh;
       overflow: hidden;
-      }
-
-    #chat-container {
-      background-color: #b8298b;
-      padding: 5px;
-      height: 90vh;
+      margin: 0;
     }
-
+    
+    #chat-container {
+      background-color: #fff; /* Change background color to white */
+      height: 100vh;
+      width: 100vw;
+      max-width: 400px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
     h1 {
       font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
       text-align: center;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+      color: rgb(78, 76, 76);
+      border-bottom: 1px solid ;
     }
-
+    h1::after{
+      color: rgb(232, 151, 94);
+      content: '(Assembled by Salman Anik)';
+      font-size: 0.5rem;
+      top: 2vh;
+      position: absolute;
+    }
+    
     #chat-history {
-      height: 70vh;
-      width: 95vw;
-      background-color: green;
+      flex-grow: 1;
+      width: 100%;
+      background-color: #fff; /* Change background color to white */
       overflow-y: scroll;
+      padding: 5px;
     }
-
-    .user-message {
-      text-align: right;
-      padding: 10px;
-      background-color: #f0f0f0;
-      border-radius: 10px;
-      margin-bottom: 5px;
+    
+    .message {
+      max-width: 80%;
+      margin-bottom: 10px;
+      word-wrap: break-word;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
     }
-
+    
+    .user-message,
     .bot-message {
-      text-align: left;
-      padding: 10px;
-      background-color: #e0f0e0;
+      font-size: 0.8.5rem;
       border-radius: 10px;
-      margin-bottom: 5px;
+      padding: 10px;
+      clear: both;
+      max-width: 60vw;
+      margin: 4px;
+      position: relative;
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
     }
-
+    
+    .user-message {
+      align-self: flex-end;
+      float: right;
+    }
+    
+    .bot-message {
+      float: left;
+      align-self: flex-start;
+    }
+    
     form {
       display: flex;
+      align-items: center;
+      padding: 5px;
+      border-top: 1px solid #ddd;
     }
-
+    
     input {
+      outline: none;
       flex-grow: 1;
-      margin-right: 10px;
-      padding: 10px;
-      border: 1px solid #ccc;
+      padding: 12px;
+      border: none;
       border-radius: 5px;
+      background-color: #fff; /* Change background color to white */
+      margin-right: 10px;
+      font-size: 14px;
     }
 
     button {
-      background-color: #4CAF50;
-      color: white;
+      background-color: coral;
+      color: #fff; /* Change text color to white */
       border: none;
-      padding: 10px 15px;
+      padding: 12px 18px;
       border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s ease; /* Add a smooth transition effect */
     }
-
+    
+    button:hover {
+      background-color: #ff6347; /* Darker coral color on hover */
+    }
+    
+    
     .typing-indicator-bot {
       white-space: nowrap;
       overflow: hidden;
-      border-right: 2px solid #000;
+      border-right: 2px solid #fff; /* Change border color to white */
       margin-top: 5px;
       animation: typing 1s steps(20, end), blink-caret 0.5s step-end infinite;
       display: none;
     }
-
+    
     .typing-indicator-bot.active {
       display: inline-block;
     }
-
+    
+    @keyframes typing {
+      from {
+        width: 0;
+      }
+    }
+    
+    @keyframes blink-caret {
+      50% {
+        border-color: transparent;
+      }
+    }
+    
   </style>
 
 </head>
@@ -101,7 +158,7 @@
 
 
   <div id="chat-container">
-    <h1>UDRITA</h1>
+    <h1><span style="color: coral;">U</span>DRITA</h1>
     <div id="chat-history"></div>
     <form id="chat-form">
       <input autocomplete="off" type="text" id="user-input" placeholder="Enter your message" required>
